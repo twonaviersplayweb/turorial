@@ -16,15 +16,11 @@ class DmozSpider(Spider):
         'https://book.douban.com/tag/%E7%BC%96%E7%A8%8B'
     ]
     
-    headers = {
-            "User-Agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36",
-            
-    } 
 
 
     def parse(self, response):
         sel = Selector(response)
-        sites = sel.xpath('//ul[@class="subject-item"]/a')
+        sites = sel.xpath('//ul[@class="subject-list"]/li[@class="subject-item"]/div[@class="info"]')
         items = []
         print('111111#######################')
         print(sites)
@@ -34,7 +30,7 @@ class DmozSpider(Spider):
 
         for site in sites:
             item = DmozItem()
-            item['name'] = site.xpath('a/text()').extract()
+            item['name'] = site.xpath('h2/a/text()').extract()
             item['url'] = site.xpath('a/@href').extract()
             item['description'] = site.xpath('text()').re('-\s[^\n]*\\r')
             print(item)
