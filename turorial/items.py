@@ -13,5 +13,6 @@ class DmozItem(Item):
     # name = scrapy.Field()
     name = Field()
     description = Field()
-    url = Field()
+    pub = Field()
+    img_url = Field()
 

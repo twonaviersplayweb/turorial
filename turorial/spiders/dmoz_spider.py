@@ -15,24 +15,23 @@ class DmozSpider(Spider):
     start_urls = [
         'https://book.douban.com/tag/%E7%BC%96%E7%A8%8B'
     ]
-    
-
 
     def parse(self, response):
         sel = Selector(response)
-        sites = sel.xpath('//ul[@class="subject-list"]/li[@class="subject-item"]/div[@class="info"]')
+        sites = sel.xpath("//li[@class='subject-item']")
         items = []
-        print('111111#######################')
-        print(sites)
-        
-        with open('result', 'wb') as f:
-            f.write(response.body)
-
         for site in sites:
             item = DmozItem()
-            item['name'] = site.xpath('h2/a/text()').extract()
-            item['url'] = site.xpath('a/@href').extract()
-            item['description'] = site.xpath('text()').re('-\s[^\n]*\\r')
+            title = strip_list(site.xpath('div[2]/h2/a/text()').extract())[0]
+            subtitle = strip_list(site.xpath('div[2]/h2/a/span/text()').extract())
+            item['name'] = title + subtitle[0] if subtitle else title
+            item['pub'] = strip_list(site.xpath('div[2]/div[1]/text()').extract())[0]
+            item['description'] = strip_list(site.xpath('div[2]/p/text()').extract())[0].replace('\n', '')
+            item['img_url'] = site.xpath('div[1]/a/@href').extract()[0]
             print(item)
             items.append(item)
         return items
+
+
+def strip_list(list):
+    return [ i.strip() for i in list if len(i) > 4]
