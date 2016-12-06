@@ -2,11 +2,11 @@
 
 __author__ = 'yooner'
 
-
+import re
 from scrapy.spider import Spider
 from scrapy.selector import Selector
 from turorial.items import DmozItem
-
+from scrapy.http import Request
 
 
 class DmozSpider(Spider):
@@ -19,6 +19,7 @@ class DmozSpider(Spider):
     def parse(self, response):
         sel = Selector(response)
         sites = sel.xpath("//li[@class='subject-item']")
+        url_prefix = 'https://book.douban.com'
         items = []
         for site in sites:
             item = DmozItem()
@@ -30,8 +31,25 @@ class DmozSpider(Spider):
             item['img_url'] = site.xpath('div[1]/a/@href').extract()[0]
             print(item)
             items.append(item)
-        return items
+            yield item
 
+        next_url = sel.xpath('//*[@id="subject_list"]/div[2]/span[4]/a/@href').extract()[0]
+        print(next_url)
+        if next_url and int(re.search('\d+', next_url).group(0)) < 120:
+            url = url_prefix + next_url
+            yield Request(url, callback=self.parse)
 
+def check_list(arg_type):
+    def make_wrapper(func):
+        def wrapper(*args, **kwarg):
+            if len(args[0]) > 1:
+                return func(*args, **kwarg)
+            else:
+                new_args = tuple(['None'])
+                return func(*new_args, **kwar)
+        return wrapper
+    return make_wrapper
+
+@check_list
 def strip_list(list):
-    return [ i.strip() for i in list if len(i) > 4]
+    return [ i.strip() for i in list if len(i) > 4] if list else ['none']
