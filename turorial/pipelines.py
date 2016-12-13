@@ -4,13 +4,16 @@
 #
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
-from sqlalchemy import creat_engine, Column, Integer, String
+from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+import os
 
 
-sqlite_url = ''
-engine = creat_engine(sqlite_url, echo=True)
+basedir = os.path.abspath(os.path.dirname(__file__))
+sqlite_url = 'sqlite:///' + os.path.join(basedir, 'data.sqlite')
+
+engine = create_engine(sqlite_url, echo=True)
 Session = sessionmaker(bind=engine)
 session = Session()
 Base = declarative_base()
