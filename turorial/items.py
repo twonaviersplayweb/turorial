@@ -15,4 +15,5 @@ class DmozItem(Item):
     description = Field()
     pub = Field()
     img_url = Field()
+    tag = Field()
 

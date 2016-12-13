@@ -65,9 +65,10 @@ ROBOTSTXT_OBEY = True
 
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#   'turorial.pipelines.TurorialPipeline': 1,
-#}
+ITEM_PIPELINES = {
+  'turorial.pipelines.TurorialPipeline': 300,
+}
+LOG_LEVEL = 'INFO'
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html
