@@ -21,10 +21,10 @@ class DmozSpider(CrawlSpider):
 
     rules = (
         #Rule(LinkExtractor(allow=(''))),
-        Rule(LinkExtractor(allow=('/tag/\w+\?start=\d+')), callback="parse_item"),
+        Rule(LinkExtractor(allow=('/tag/\w+\?start=\d0?\d')), callback="parse_item"),
 
     )
-    print(rules)
+
     def parse_item(self, response):
         sel = Selector(response)
         sites = sel.xpath("//li[@class='subject-item']")
@@ -43,7 +43,6 @@ class DmozSpider(CrawlSpider):
             item['description'] = strip_list(site.xpath('div[2]/p/text()').extract())[0].replace('\n', '')
             item['img_url'] = site.xpath('div[1]/a/@href').extract()[0]
             item['tag'] = tag
-            #print(item)
             items.append(item)
             yield item
 
